@@ -1,0 +1,14 @@
+body { padding: 50px 0px; background: #fff; }
+
+.nav > li { position: relative; display: block; float: left; }
+.footer-sticky { position: fixed; bottom: 0px; left: 0px; min-height: 40px; width: 100%; }
+.navbar { min-height: 40px; }
+.nav>li>a:hover, .nav>li>a:focus { background-color: #43783b; color: #eee; }
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover { background-color: #4378b3; color: #eee; }
+.navbar-brand { height: 40px; padding: 10px 15px; }
+.navbar-header>a:hover, .navbar-header>a:focus { color: #fff; }
+.navbar-green { background-color: #579a4c; border-color: #173517; }
+.font-white { color: #fff; }
+.bg-blue { background-color: #0077be }
+.navbar-toggle .icon-bar { background-color: #fff; }
+.dropdown-menu>.separator { padding-left: 10px; font-weight: bold; }
