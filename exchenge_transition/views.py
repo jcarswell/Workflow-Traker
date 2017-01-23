@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from djago.http import HttpResponse, Http404
+from djago.http import HttpResponse, Http404, HttpRequest
 from djago.template import loader
 
-from .models import Users, UserStep
+from .models import Users, UserStep, Steps
 
 # Create your views here.
 
@@ -13,7 +13,8 @@ def index(request):
 def user(request, username):
     try 
         user = Users.objects.get(name=username)
-    except Users.DoesNotExist
+        steps = UserStep.objects.get(name=username)
+    except Users.DoesNotExist:
         raise Http404("User %s does not exist" % username)
 
     steps
@@ -21,3 +22,15 @@ def user(request, username):
         'user' : user
         'steps' : steps
     }
+    return HttpResponse(render(request, 'exchange_transition', context))
+
+def submit(request, username):
+    try:
+        user = Users.objects.get(name=username)
+        try:
+            step = user.UserStep_set.get(step=request.POST['stepOrder'])
+        except user.UserStep_set.DoesNotExist:
+            # check if step exist or raise 404
+    except Users.DoesNotExist:
+        raise Http404("User %s does not exist" % username)
+
