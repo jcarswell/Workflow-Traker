@@ -35,12 +35,32 @@ class Step(models.Model):
     def __str__(self):
         return "%i. %s" % (self.order, self.name)
 
-    def clean(self):
+    def save(self):
         try:
-            pass ## Check if order is unique
-        except:
-            pass ## update table order = n+1 loop
+            Step.objects.get(order=self.order)
+            n = int(Step.Objects[-1].order) * -1 # convert n to negative so we can count backwards and don't violate ordering
+            for x in range(n, ((int(self.order) - 1) * -1)): # for x in range(-1,0) will produce one iteration of -1
+                x *= -1 # convert x to a positive and process order update
+                fUpdate = Step.objects.get(order=x)
+                fUpdate.order = x + 1 # order = i
+                fUpdate.save()
 
+        except Step.DoesNotExist:
+            pass # We don't need to do anything if the order is already unique
+
+        super(Step, self).save()
+
+        #create UserStep objects
+
+    def delete(self):
+        delorder = self.order
+        super(Step, self).delete()
+        n = int(Step.objects[-1].order)
+        if n > order:
+            for x in range(order + 1, n + 1): # Close the order gap
+                fUpdate = Step.objects.get(order=x)
+                fUpdate.order = x - 1 # order = i
+                fUpdate.save()
 
 class UserStep(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
