@@ -10,7 +10,7 @@ class User(models.Model):
     alias = models.CharField(max_length=100, null=True)
     completed = models.BooleanField(default=False)
     completedOn = models.DateTimeField(null=True)
-    completedBy = models.CharField(max_length=200, null=True)
+    completedBy = models.CharField(max_length=200, null=True, blank=True)
     comments = models.TextField(default="** Enter Relevent notes here **")
 
     def __str__(self):
@@ -78,5 +78,6 @@ class UserStep(models.Model):
     step = models.ForeignKey(Step, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     completedOn = models.DateTimeField()
+    completedBy = models.CharField(max_length=200, blank=True, null=True)
     unique_together = ("user","step")
 
