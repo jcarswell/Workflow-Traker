@@ -23,6 +23,13 @@ class User(models.Model):
         if validChar.match(self.alias) is None:
             raise ValidationError( {"alias" : _("Alias contains invalid characters")} )
         
+    def save(self):
+        super(User, self).save()
+
+        steps = Steps.objects
+        user = User.object.get(name=self.name)
+        for step in steps:
+            UserStep(step=step,user=user).save()
 
 class Step(models.Model):
     order = models.IntegerField()
@@ -51,6 +58,10 @@ class Step(models.Model):
         super(Step, self).save()
 
         #create UserStep objects
+        users = User.objects
+        step = Step.objects.get(order=self.order)
+        for user in users:
+            UserStep(user=user, step=step).save()
 
     def delete(self):
         delorder = self.order
