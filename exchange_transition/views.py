@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from djago.http import HttpResponse, Http404, HttpRequest
-from djago.template import loader
+from django.http import HttpResponse, Http404, HttpRequest
+from django.template import loader
 
 from .models import User, UserStep, Step
 
@@ -11,7 +11,7 @@ def index(request):
     return HttpResponse(render(request, 'exchange_transition/index.html', { 'users' : users }))
 
 def user(request, username):
-    try 
+    try:
         user = User.objects.get(name=username)
         steps = UserStep.objects.get(name=username)
     except Users.DoesNotExist:
@@ -19,9 +19,9 @@ def user(request, username):
 
     steps
     context = {
-        'user' : user
-        'steps' : steps
-    }
+        'user' : user,
+        'steps' : steps,
+        }
     return HttpResponse(render(request, 'exchange_transition', context))
 
 def submit(request, username):
@@ -30,6 +30,7 @@ def submit(request, username):
         try:
             step = user.UserStep_set.get(step=request.POST['stepOrder'])
         except user.UserStep_set.DoesNotExist:
+            pass
             # check if step exist or raise 404
     except Users.DoesNotExist:
         raise Http404("User %s does not exist" % username)
