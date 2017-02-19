@@ -7,10 +7,7 @@ from .models import User, UserStep, Step
 
 def index(request):
     users = User.objects.order_by('name')
-    if request.COOKIES.has_key('techname'):
-        techname = request.COOKIES['techname']
-    else:
-        techname = ""
+    techname = str(request.COOKIES.get('techname', ''))
     request.session.set_test_cookie()
     context = { 
         'users' : users,
@@ -39,11 +36,11 @@ def user(request, username):
         }
     return HttpResponse(render(request, 'exchange_transition', context))
 
-def submit(request, username):
+def submit(request):
     if request.method != 'POST':
         return redirect(index)
     else:
-        if request.COOKIES.has_key('techname'):
+        if 'techname' in request.COOKIES:
             techname = request.COOKIES['techname']
         else:
             return HttpResponse("Technician name not available, please return to the main page a try again")
