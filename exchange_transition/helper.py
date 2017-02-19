@@ -16,7 +16,7 @@ class UserStep_Helper():
         does not exist
         """
         try:
-            userAdd User.objects.get(name = userName)
+            userAdd = User.objects.get(name = userName)
         except User.DoesNotExist:
             raise ValidationError( { "User" : _("Invalid User received") } )
 
@@ -61,9 +61,9 @@ class Step_Helper():
         if orderLast == Step.objects.count():
             return #No need to go further as the higest order value is equal to the total number of objects
 
-        for stepX in range(1,orderLast+1)
+        for stepX in range(1,orderLast+1):
             try:
-                stepCur = Step.objects.get(filter=stepX)
+                stepCur = Step.objects.get(order=stepX)
             except Step.DoesNotExist:
                 pass #We will find the next valid object and set the order to orderX+1
             else:
