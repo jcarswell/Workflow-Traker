@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<h1>Exchange Transition Management</h1>
+<ul>
+    <li><a href="{% url 'et_manage_view_steps' %}">Manage Steps</a></li>
+    <li><a href="{% url 'et_manage_view_steps' %}">Manage Users</a></li>
+</ul>
+<a href="{% url 'et_manage_report' %}">Current progress</a>
+{% endblock %}
