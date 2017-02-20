@@ -67,10 +67,10 @@ def submit(request):
             raise Http404("User %s does not exist" % username)
 
 def manage_root(request):
-    if requst.method != 'GET':
-        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+    if request.method != 'GET':
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
-    HttpResponse(render(request, 'exchange_transition/admin.html'))
+    return HttpResponse(render(request, 'exchange_transition/admin.html'))
 
 def manage_view_users(request, userAdded=None):
     if request.method != 'GET': 
