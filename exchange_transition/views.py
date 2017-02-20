@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import loader
 from .models import User, UserStep, Step
+from .helper import *
 
 # Create your views here.
 
@@ -65,3 +66,116 @@ def submit(request):
         except Users.DoesNotExist:
             raise Http404("User %s does not exist" % username)
 
+def manage_root(request):
+    if requst.method != 'GET':
+        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+
+    HttpResponse(render(request, 'exchange_transition/admin.html'))
+
+def manage_view_users(request, userAdded=None):
+    if request.method != 'GET': 
+        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+
+    allUsers = User.objects.order_by('name')
+    context = {
+        "users" : allUsers,
+    }
+    return HttpResponse(render(request, 'exchange_transition/admin_view_users.html', context))
+
+def manage_view_steps(request, stepAdded=None):
+    if request.method != 'GET': 
+        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+
+    allSteps = Step.objects.all()
+    context = {
+        "steps" : allSteps,
+    }
+    return HttpResponse(render(request, 'exchange_transition/admin_view_steps.html', context))
+
+def manage_report(request, userAlias=None, orderId=None):
+    if request.method != 'GET': 
+        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+    if request.method == 'GET':
+        usersteps = UserStep.objects.order_by('user')
+        context = {
+            "userstep" : userstep,
+        }
+        return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
+
+def manage_delete_step(request, orderId):
+    if request.metord != 'POST':
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+    
+    try:
+        step = Step.opbjects.get(order=order)
+    except Step.DoesNotExist:
+        return HttpResponse("Step with at %s does not exist" % str(order))
+    
+    name = step.name
+    step.delete()
+    Step_Helper().reorder()
+    return HttpResponse("Step %s. %s was removed successfully" % (str(order), name))
+
+def manage_delete_user(request, userAlias):
+    if request.metord != 'POST':
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+    
+    try:
+        userDel = User.objects.get(alias=userAlias)
+    except User.DoesNotExist:
+        return HttpResponse("User with alias %s does not exist" % userAlias)
+    
+    userName = userDel.name
+    userDel.delete()
+    return HttpResponse("User %s was removed Successfully" % userName)
+
+def manage_new_step(request):
+    if request.method == 'POST':
+        try:
+            order = request.POST['order']
+            name = request.POST['name']
+            description = request.POST['description']
+        except ValueError:
+            return HttpResponse("Error All fields are requred")
+        else:
+            newStep = Step(order=order, name=name, description=description)
+            Step_Helper().preSave(order)
+            try:
+                newStep.save()
+            except Exception:
+                Step_Helper().reorder() #Make sure we remove the space that was created
+                return HttpResponse("error while saving, please contact the web admin for additional details")
+            else:
+                UserStep_Helper().addStep(order)
+        
+        return redirect('manage_view_step' stepAdded=True)
+            
+    elif request.method == 'GET':
+        return HttpResponse(render(request, 'excahnge_transition/admin_new_step.html'))
+    
+    else 
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+ 
+def manage_new_user(reqest):
+    if request.method == 'POST':
+        try:
+            userName = requets.POST['name']
+            userAlias = request.POST['alias']
+        except ValueError:
+            return HttpResponse("Error all fields are required")
+        else:
+            newUser = User(name=userName, alias=userAlias)
+            try:
+                newUser.save()
+            except Exception:
+                return HttpResponse("error while saving, please contact the web admin for additional details")
+            else:
+                UserStep_Helper().addUser(userName)
+
+        return redirect('manage_view_user', userAdded=True)
+        
+    elif request.method == 'GET':
+        return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', context))
+
+    else 
+        return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
