@@ -3,6 +3,7 @@
 {% block body %}
     {% if users %}
     <form action "/submit">
+        <label for="username">User: </label>
         <select name="username" required>
         {% for user in users %}
             <option value="{{ user.id }}">{{ user.name }}</option>
