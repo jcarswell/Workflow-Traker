@@ -35,7 +35,7 @@ def user(request, username):
         'user' : user,
         'steps' : steps,
         }
-    return HttpResponse(render(request, 'exchange_transition', context))
+    return HttpResponse(render(request, 'exchange_transition/user.html', context))
 
 def submit(request):
     if request.method != 'POST':
@@ -148,12 +148,12 @@ def manage_new_step(request):
             else:
                 UserStep_Helper().addStep(order)
         
-        return redirect('manage_view_step' stepAdded=True)
+        return redirect('manage_view_step', stepAdded=True)
             
     elif request.method == 'GET':
         return HttpResponse(render(request, 'excahnge_transition/admin_new_step.html'))
     
-    else 
+    else: 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
  
 def manage_new_user(reqest):
@@ -177,5 +177,5 @@ def manage_new_user(reqest):
     elif request.method == 'GET':
         return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', context))
 
-    else 
+    else:
         return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
