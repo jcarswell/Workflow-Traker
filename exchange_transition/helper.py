@@ -54,27 +54,52 @@ class UserStep_Helper():
         userAll = None
 
 class Step_Helper():
-    def reorder(self):
-        stepLast = Step.objects.order_by('-order')[1]
-        orderLast = stepLast.order
-        orderX = 0
-        if orderLast == Step.objects.count():
-            return #No need to go further as the higest order value is equal to the total number of objects
-
-        for stepX in range(1,orderLast+1):
+    def reorder():
+        """
+        reorder is a helper function for the Step model. It is used
+        to ensure that all of the Step Orders are in line and are without
+        incongruity. this function should be used sparingly and only when
+        there are no duplicates in the database. if this function is called
+        and there is duplicates it could cause all of the objects beyond
+        the duplicate to be thrown way out of order.
+        
+        Arguements:
+            None 
+        """
+        if Step.objects.count() < Step.objects.order_by('-order')[0].order:
+            stepOrderLast = Step.objects.order_by('-order')[0].order
+        else:
+            stepOrderLast = Step.objects.count()
+        
+        orderX = stepOrderCurrent = 1
+        while stepOrderCurrent <= stepOrderLast:
             try:
-                stepCur = Step.objects.get(order=stepX)
+                stepCurrent = Step.objects.get(order=stepOrderCurrent)
             except Step.DoesNotExist:
                 pass #We will find the next valid object and set the order to orderX+1
+            except Step.MultipleObjectsReturned:
+                #We will cause this exception to be encounter until all objects have a unique ID
+                # alternatively an admin would have to login and correct the issue manually or
+                # from the admin site. We will only increment the last step by one. Though this
+                # may be dangerous as it could cause a Step to go from its correct postition to
+                # the last step.
+                for stepCurrent in Step.objects.filter(order=stepOrderCurrent)[1:]:
+                    stepCurrent.order += 1
+                    stepCurrent.save()
+                    
+                stepCurrent = None
             else:
-                if stepCur.order != (orderX + 1): #if the object is out of order correct it
+                if stepCurrent.order != (orderX): #if the object is out of order correct it
+                    stepCurrent.order = orderX
+                    stepCurrent.save()
+                    stepCurrent = None
                     orderX += 1
-                    stepCur.order = orderX
-                    stepCur.save()
                 else: #Otherwise just increment orderX
                     orderX += 1
+
+            stepOrderCurrent += 1
         
-    def preSave(self, orderAdd):
+    def preSave(orderAdd):
         """
         preSave is a helper function that ensure that before 
         a new object is added that the orders are correct and 
@@ -87,19 +112,20 @@ class Step_Helper():
                 that a new Step is to be saved
         """
         stepOrderCurrent = Step.objects.order_by('-order')[1].order
-        while stepOrderCurrent < orderAdd:
+        while stepOrderCurrent >= orderAdd:
             try:
+                print("retriving step %i" % stepOrderCurrent)
                 stepCurrent = Step.objects.get(order=stepOrderCurrent)
             except Step.DoesNotExist:
                 self.reorder() #call the reorder function incase theres a gap and try again
                 try:
-                    stepCurrrent = Step.objects.get(order=stepOrderCurrent)
+                    stepCurrent = Step.objects.get(order=stepOrderCurrent)
                 except Step.DoesNotExist:
                     raise Exception("Somethings gone wrong it seems that there no steps")
  
-            stepCurrrent.order += 1
-            stepCurrrent.save() 
-            stepCurrrent = None
+            stepCurrent.order += 1
+            stepCurrent.save() 
+            stepCurrent = None
 
             stepOrderCurrent -= 1
 
