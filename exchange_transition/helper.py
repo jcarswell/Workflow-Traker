@@ -75,20 +75,34 @@ class Step_Helper():
                     orderX += 1
         
     def preSave(self, orderAdd):
-        if orderAdd <= Step.objects.order_by('-order')[1].order:
-            #Don't put the following in a for loop as it will be recursive on object save
+        """
+        preSave is a helper function that ensure that before 
+        a new object is added that the orders are correct and 
+        that argument orderAdd is not going to overlap with an
+        existing order. 
+        
+        Arguments:
+            self        : the class must be initialized 
+            orderAdd    : take an integer and is the order ID
+                that a new Step is to be saved
+        """
+        stepOrderCurrent = Step.objects.order_by('-order')[1].order
+        while stepOrderCurrent < orderAdd:
             try:
-                stepCur = Step.objects.get(order=orderAdd)
+                stepCurrent = Step.objects.get(order=stepOrderCurrent)
             except Step.DoesNotExist:
                 self.reorder() #call the reorder function incase theres a gap and try again
                 try:
-                    stepCur = Step.objects.get(order=stepX)
+                    stepCurrrent = Step.objects.get(order=stepOrderCurrent)
                 except Step.DoesNotExist:
                     raise Exception("Somethings gone wrong it seems that there no steps")
  
-            stepCur.order += 1
-            stepCur.save() #this will trigger pre_save again ang recuse until the order has been updated
-            stepCur = None
+            stepCurrrent.order += 1
+            stepCurrrent.save() 
+            stepCurrrent = None
+
+            stepOrderCurrent -= 1
+
 
     def postDelete(self):
         self.reorder() #Just for cleanliness sake
