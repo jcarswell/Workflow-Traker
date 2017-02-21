@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <label for="order">Order: </label>
+    <select name="order" required>
+    {% for order in stepcount %}
+        <option value="{{ order }}">{{order}}</option>
+    {% endfor %}
+    </select>
+    <br />
+    <label for="name">Name: </label>
+    <input type="text" name="name" required/><br />
+    <label for="description">Description: </label><br />
+    <textarea name="description" placeholder="Specific details as to what is needed to complete this step" rows="4" cols="80"></textarea>
+    <input type="submit" value="Add">
+</form>
+
+{% endblock %}

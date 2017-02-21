@@ -132,7 +132,7 @@ def manage_delete_user(request, userAlias):
 def manage_new_step(request):
     if request.method == 'POST':
         try:
-            order = request.POST['order']
+            order = int(request.POST['order'])
             name = request.POST['name']
             description = request.POST['description']
         except ValueError:
@@ -151,7 +151,15 @@ def manage_new_step(request):
         return redirect('manage_view_step', stepAdded=True)
             
     elif request.method == 'GET':
-        return HttpResponse(render(request, 'excahnge_transition/admin_new_step.html'))
+        try:
+            lastStepOrder = Step.objects.order_by('-order')[0].order
+        except:
+            lastStepOrder = 0
+
+        context = {
+            "stepcount" : range(1, lastStepOrder + 2),
+        }
+        return HttpResponse(render(request, 'exchange_transition/admin_new_step.html', context))
     
     else: 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
