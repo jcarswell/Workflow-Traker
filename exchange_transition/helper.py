@@ -54,7 +54,7 @@ class UserStep_Helper():
         userAll = None
 
 class Step_Helper():
-    def reorder():
+    def reorder(self):
         """
         reorder is a helper function for the Step model. It is used
         to ensure that all of the Step Orders are in line and are without
@@ -99,7 +99,7 @@ class Step_Helper():
 
             stepOrderCurrent += 1
         
-    def preSave(orderAdd):
+    def preSave(self, orderAdd):
         """
         preSave is a helper function that ensure that before 
         a new object is added that the orders are correct and 
