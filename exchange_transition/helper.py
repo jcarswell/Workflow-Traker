@@ -3,25 +3,25 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 class UserStep_Helper():
-    def addUser(self, userName):
+    def addUser(self, userAlias):
         """ 
         This function is used to create the UserStep objects
         when a new user is created, it will be called from the
         handlers file as post_save signel handler
 
-        This function take the created User objects name as the
-        only argument and returns nothing
+        Arguments:
+            self      : the class must be initalized
+            userAlias : The alias of the user to be added
 
         This function will raise a vaildation error if the user
         does not exist
         """
         try:
-            userAdd = User.objects.get(name = userName)
+            userAdd = User.objects.get(alias = userAlias)
         except User.DoesNotExist:
             raise ValidationError( { "User" : _("Invalid User received") } )
 
-        stepAll = Step.objects.all()
-        for stepX in stepAll:
+        for stepX in Step.objects.all():
             new = UserStep(user=userAdd,step=stepX)
             new.save()
             new = None
