@@ -38,7 +38,7 @@ class UserStep(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     step = models.ForeignKey(Step, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
-    completedOn = models.DateTimeField()
+    completedOn = models.DateTimeField(null=True)
     completedBy = models.CharField(max_length=200, blank=True, null=True)
     unique_together = ("user","step")
     
