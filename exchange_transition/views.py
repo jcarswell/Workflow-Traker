@@ -19,7 +19,7 @@ def index(request):
                 techname = request.POST['techname']
             except ValueError:
                 return HttpResponse("Technician name not available, please return to the main page a try again")
-        else
+        else:
             return HttpResponse("Technician name not available, please return to the main page a try again")
 
         try:
@@ -49,7 +49,7 @@ def index(request):
         }
         request.session.set_test_cookie()
         return HttpResponse(render(request, 'exchange_transition/index.html', context))
-    else
+    else:
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
 
