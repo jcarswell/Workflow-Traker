@@ -1,0 +1,3 @@
+This django app currently named exchange_transition is a basic tracking system that track task in a project aginst a set of users, whilst tracking whos is makeing the changes.
+
+additionally this has a custom admin interface to add users and steps this can be accessed via; site.fqdn/app/Manage
