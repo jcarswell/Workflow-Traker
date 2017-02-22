@@ -2,18 +2,21 @@
 
 {% block body %}
     {% if users %}
-    <form action "/submit">
-        <label for="username">User: </label>
-        <select name="username" required>
+    <form action="{% url 'et_submit' %}" method="post">
+        {% csrf_token %}
+        <label for="username">User:</label>
+        <select name="username" class="txt-form" required>
         {% for user in users %}
-            <option value="{{ user.id }}">{{ user.name }}</option>
+            <option value="{{ user.alias }}">{{ user.name }}</option>
         {% endfor %}
         </select>
         <br />
-        <label for="techname">Technician Name: </label>
-        <input type="text" name="techname" required />
+        <label for="techname">Technician Name:</label>
+        <input type="text" name="techname" class="txt-form" required />
         <br />
-        <input type="submit" value="go">
+        <div class="btn-group-submit">
+            <input type="submit" class="btn"value="Go">
+        </div>
     </form>
     {% else %}
     <p>Please add at least one user and try again</p>
