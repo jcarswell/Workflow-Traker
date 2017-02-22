@@ -1,4 +1,4 @@
-body { padding: 50px 0px; background: #fff; }
+body { padding: 50px 0px; background: #fff; font: Arial;}
 
 .nav > li { position: relative; display: block; float: left; }
 .footer-sticky { position: fixed; bottom: 0px; left: 0px; min-height: 40px; width: 100%; }
@@ -12,3 +12,8 @@ body { padding: 50px 0px; background: #fff; }
 .bg-blue { background-color: #0077be }
 .navbar-toggle .icon-bar { background-color: #fff; }
 .dropdown-menu>.separator { padding-left: 10px; font-weight: bold; }
+.btn-group-submit { margin-top: 10px; padding: 5px ; background: #eee; border-radius: 4px; display: block; box-shadow: 0px 0px 5px #999; height: 45px }
+.btn { background-color: #579a4c; float: right; color: #fff; font-weight: bold; margin: 0 5px;}
+form { margin-top: 10px; }
+.txt-form { border-top: none; border-right: none; border-left: none; border-bottom: 2px black solid; }
+form > label { width: 80px; margin-bottom: 8px; }

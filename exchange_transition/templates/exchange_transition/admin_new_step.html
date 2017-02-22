@@ -15,10 +15,13 @@
     </select>
     <br />
     <label for="name">Name: </label>
-    <input type="text" name="name" required/><br />
+    <input type="text" name="name" class="txt-form" required/><br />
     <label for="description">Description: </label><br />
     <textarea name="description" placeholder="Specific details as to what is needed to complete this step" rows="4" cols="80"></textarea>
-    <input type="submit" value="Add">
+    <div class="btn-group-submit">
+        <input type="submit" name="submit" value="Save" class="btn" />
+        <input type="submit" name="submit" value="Save and add another" class="btn" />
+    </div>
 </form>
 
 {% endblock %}
