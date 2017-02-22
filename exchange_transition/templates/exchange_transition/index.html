@@ -4,8 +4,8 @@
     {% if users %}
     <form action="{% url 'et_submit' %}" method="post">
         {% csrf_token %}
-        <label for="username">User</label>
-        <select name="username" class="txt-form" required>
+        <label for="useralias">User</label>
+        <select name="useralias" class="txt-form" required>
         {% for user in users %}
             <option value="{{ user.alias }}">{{ user.name }}</option>
         {% endfor %}
