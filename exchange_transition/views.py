@@ -135,6 +135,10 @@ def manage_new_step(request):
             order = int(request.POST['order'])
             name = request.POST['name']
             description = request.POST['description']
+            try:
+                returnAction = request.POST['submit']
+            except:
+                returnAction = "Save"
         except ValueError:
             return HttpResponse("Error All fields are requred")
         else:
@@ -147,8 +151,15 @@ def manage_new_step(request):
                 return HttpResponse("error while saving, please contact the web admin for additional details")
             else:
                 UserStep_Helper().addStep(order)
-        
-        return redirect('manage_view_step', stepAdded=True)
+        if returnAction == "Save":
+            return redirect('manage_view_step')
+        else:
+            context = {
+                "stepcount" : range(1, lastStepOrder + 2),
+                "added" : True,
+            }
+            return HttpResponse(render(request, 'exchange_transition/admin_new_step.html', context))
+
             
     elif request.method == 'GET':
         try:
@@ -164,11 +175,15 @@ def manage_new_step(request):
     else: 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
  
-def manage_new_user(reqest):
+def manage_new_user(request):
     if request.method == 'POST':
         try:
-            userName = requets.POST['name']
+            userName = request.POST['name']
             userAlias = request.POST['alias']
+            try:
+                returnAction = request.POST['submit']
+            except:
+                returnAction = "Save"
         except ValueError:
             return HttpResponse("Error all fields are required")
         else:
@@ -178,12 +193,15 @@ def manage_new_user(reqest):
             except Exception:
                 return HttpResponse("error while saving, please contact the web admin for additional details")
             else:
-                UserStep_Helper().addUser(userName)
-
-        return redirect('manage_view_user', userAdded=True)
+                UserStep_Helper().addUser(userAlias)
+        
+        if returnAction == "Save":
+            return redirect('et_manage_view_user')
+        else:
+            return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', {"added" : True}))
         
     elif request.method == 'GET':
-        return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', context))
+        return HttpResponse(render(request, 'exchange_transition/admin_new_user.html'))
 
     else:
         return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
