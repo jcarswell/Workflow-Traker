@@ -1,4 +1,4 @@
-body { padding: 50px 0px; background: #fff; font: Arial;}
+body { padding: 50px 0px; background: #fff; font-family: Arial;}
 
 .nav > li { position: relative; display: block; float: left; }
 .footer-sticky { position: fixed; bottom: 0px; left: 0px; min-height: 40px; width: 100%; }
