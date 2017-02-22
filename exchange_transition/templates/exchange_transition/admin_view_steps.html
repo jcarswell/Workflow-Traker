@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<a class="btn a-btn" href="{% url 'et_manage_new_step' %}">Add Step</a>
+<table class="table">
+    <tr>
+        <th>Order</th>
+        <th>Name</th>
+    <tr>
+    {% if steps %}
+        {% for step in steps %}
+            <tr>
+                <td>{{ step.order }}</td>
+                <td>{{ step.name }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+</table>                
+{% endblock %}
+
