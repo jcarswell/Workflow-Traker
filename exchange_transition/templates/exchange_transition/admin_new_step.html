@@ -8,7 +8,7 @@
 <form method="post">
     {% csrf_token %}
     <label for="order">Order: </label>
-    <select name="order" required>
+    <select name="order" class="txt-form" required>
     {% for order in stepcount %}
         <option value="{{ order }}">{{order}}</option>
     {% endfor %}
