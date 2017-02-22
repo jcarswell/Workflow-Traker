@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<a class="btn a-btn" href="{% url 'et_manage_new_user' %}">Add User</a>
+<table class="table">
+    <tr>
+        <th>Completed</th>
+        <th>Name</th>
+        <th>Alias</th>
+        <th>Completed On</th>
+    <tr>
+    {% if users %}
+        {% for user in users %}
+            <tr>
+            {% if user.completed %}
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+            {% else %}
+                <td><span class="glyphicon glyphicon-remove"></span></td>
+            {% endif %}
+            <td>{{ user.name }}</td>
+            <td>{{ user.alias }}</td>
+            {% if user.completedOn %}
+                <td>{{ user.completedOn }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+    {% endif %}
+</table>                
+{% endblock %}
+
