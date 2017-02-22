@@ -17,23 +17,22 @@ def index(request):
 
     return HttpResponse(render(request, 'exchange_transition/index.html', context))
 
-def user(request, username):
-    if request.COOKIES.has_key('techname'):
+def user(request, userAlias):
+    if 'techname' in request.COOKIES:
         techname = request.COOKIES['techname']
     else:
         return HttpResponse("Technician name not available, please return to the main page a try again")
 
     try:
-        user = User.objects.get(name=username)
-        steps = UserStep.objects.get(name=username)
+        user = User.objects.get(alias=userAlias)
     except Users.DoesNotExist:
-        raise Http404("User %s does not exist" % username)
+        raise Http404("User %s does not exist" % userAlias)
     request.session.set_test_cookie()
 
     steps
     context = {
         'user' : user,
-        'steps' : steps,
+        'steps' : Step.objects.order_by('order'),
         }
     return HttpResponse(render(request, 'exchange_transition/user.html', context))
 
@@ -76,9 +75,8 @@ def manage_view_users(request, userAdded=None):
     if request.method != 'GET': 
         raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
-    allUsers = User.objects.order_by('name')
     context = {
-        "users" : allUsers,
+        "users" : User.objects.order_by('name'),
     }
     return HttpResponse(render(request, 'exchange_transition/admin_view_users.html', context))
 
@@ -86,9 +84,8 @@ def manage_view_steps(request, stepAdded=None):
     if request.method != 'GET': 
         raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
-    allSteps = Step.objects.all()
     context = {
-        "steps" : allSteps,
+        "steps" : Step.objects.order_by('order'),
     }
     return HttpResponse(render(request, 'exchange_transition/admin_view_steps.html', context))
 
