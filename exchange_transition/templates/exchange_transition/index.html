@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if users %}
-    <form action="{% url 'et_submit' %}" method="post">
+    <form method="post">
         {% csrf_token %}
         <label for="useralias">User</label>
         <select name="useralias" class="txt-form" required>

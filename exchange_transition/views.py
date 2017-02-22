@@ -7,15 +7,51 @@ from .helper import *
 # Create your views here.
 
 def index(request):
-    users = User.objects.order_by('name')
-    techname = str(request.COOKIES.get('techname', ''))
-    request.session.set_test_cookie()
-    context = { 
-        'users' : users,
-        'techname' : techname,
-    }
+    if request.method == 'POST':
+        if request.session.test_cookie_worked():
+            request.session.delete_test_cookie()
+        else:
+            return HttpResponse("Cookies are required to use this site")
+        if 'techname' in request.COOKIES:
+            techname = request.COOKIES['techname']
+        elif 'techname' in request.POST:
+            try:
+                techname = request.POST['techname']
+            except ValueError:
+                return HttpResponse("Technician name not available, please return to the main page a try again")
+        else
+            return HttpResponse("Technician name not available, please return to the main page a try again")
 
-    return HttpResponse(render(request, 'exchange_transition/index.html', context))
+        try:
+            useralias = request.POST['useralias']
+        except:
+            context = { 
+                'users' : User.objects.order_by('name'),
+                'techname' : techname,
+            }
+            request.session.set_test_cookie()
+            response = HttpResponse(render(request, 'exchange_transition/index.html', context))
+            response.set_cookie('techname', techname, max_age=1000)
+            return response
+        else:
+            response = redirect('et_user', userAlias=useralias)
+            response.set_cookie('techname', techname, max_age=1000)
+            return response
+    elif request.method == 'GET':
+        try:
+            techname = request.COOKIES['techname']
+        except:
+            request.session.set_test_cookie()
+
+        context = { 
+            'users' : User.objects.order_by('name'),
+            'techname' : techname,
+        }
+        request.session.set_test_cookie()
+        return HttpResponse(render(request, 'exchange_transition/index.html', context))
+    else
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+
 
 def user(request, userAlias):
     if 'techname' in request.COOKIES:
