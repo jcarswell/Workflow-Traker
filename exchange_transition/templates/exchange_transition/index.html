@@ -4,14 +4,14 @@
     {% if users %}
     <form action="{% url 'et_submit' %}" method="post">
         {% csrf_token %}
-        <label for="username">User:</label>
+        <label for="username">User</label>
         <select name="username" class="txt-form" required>
         {% for user in users %}
             <option value="{{ user.alias }}">{{ user.name }}</option>
         {% endfor %}
         </select>
         <br />
-        <label for="techname">Technician Name:</label>
+        <label for="techname">Technician Name</label>
         <input type="text" name="techname" class="txt-form" required />
         <br />
         <div class="btn-group-submit">
