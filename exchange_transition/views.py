@@ -41,8 +41,9 @@ def index(request):
         try:
             techname = request.COOKIES['techname']
         except:
-            request.session.set_test_cookie()
-
+            techname = ""
+        
+        request.session.set_test_cookie()
         context = { 
             'users' : User.objects.order_by('name'),
             'techname' : techname,
