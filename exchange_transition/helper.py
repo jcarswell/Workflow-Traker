@@ -26,8 +26,6 @@ class UserStep_Helper():
             new.save()
             new = None
 
-        stepAll = None
-
     def addStep(self, stepOrder):
         """ 
         This function is used to create the UserStep objects
@@ -45,13 +43,10 @@ class UserStep_Helper():
         except Step.DoesNotExist:
             raise ValidationError( { "Step" : _("Invalid Step received") } )
             
-        userAll = User.objects.all()
-        for userX in userAll:
+        for userX in User.objects.all():
             new = UserStep(user=userX, step=stepNew)
             new.save()
             new = None
-
-        userAll = None
 
 class Step_Helper():
     def reorder(self):
