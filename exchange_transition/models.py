@@ -11,7 +11,7 @@ class User(models.Model):
     completed = models.BooleanField(default=False)
     completedOn = models.DateTimeField(null=True)
     completedBy = models.CharField(max_length=200, null=True, blank=True)
-    comments = models.TextField(default="** Enter Relevent notes here **")
+    comments = models.TextField(null=True)
 
     def __str__(self):
        return self.name
