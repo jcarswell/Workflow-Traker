@@ -18,7 +18,7 @@ body { padding: 50px 0px; background: #fff; font-family: Arial;}
 .btn:hover, .a-btn:hover { color: #0077BE; }
 form { margin-top: 10px; }
 .txt-form { border-top: none; border-right: none; border-left: none; border-bottom: 2px black solid; }
-form > label { width: 80px; margin-bottom: 8px; }
+form > label { width: 120px; margin-bottom: 8px; }
 .table { margin-top: 10px; }
 .flt-right { float: right; }
 .btn-delete { float: left; background-color: rgb(192,0,0); box-shadow: 0px 0px 5px rgba(110,0,0,0.4); }
