@@ -186,6 +186,7 @@ def manage_new_user(request):
         try:
             userName = request.POST['name']
             userAlias = request.POST['alias']
+            userComments = request.POST['comments']
             try:
                 returnAction = request.POST['submit']
             except:
@@ -193,7 +194,7 @@ def manage_new_user(request):
         except ValueError:
             return HttpResponse("Error all fields are required")
         else:
-            newUser = User(name=userName, alias=userAlias)
+            newUser = User(name=userName, alias=userAlias, comments=userComments)
             try:
                 newUser.save()
             except Exception:
