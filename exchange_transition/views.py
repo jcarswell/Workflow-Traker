@@ -158,7 +158,7 @@ def manage_new_step(request):
             else:
                 UserStep_Helper().addStep(order)
         if returnAction == "Save":
-            return redirect('manage_view_step')
+            return redirect(reverse('manage_view_step'))
         else:
             context = {
                 "stepcount" : range(1, lastStepOrder + 2),
@@ -202,7 +202,7 @@ def manage_new_user(request):
                 UserStep_Helper().addUser(userAlias)
         
         if returnAction == "Save":
-            return redirect('et_manage_view_user')
+            return redirect(reverse('et_manage_view_user'))
         else:
             return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', {"added" : True}))
         
@@ -288,7 +288,7 @@ def manage_step(request, orderId):
         context = {
             "order" : currentStep.order,
             "description" : currentStep.description,
-            "name" : currentStep.description,
+            "name" : currentStep.name,
             "completed" : "%s/%s" % (UserStep.objects.filter(step=currentStep).filter(completed=True).count(),
                 UserStep.objects.filter(step=currentStep).count()),
         }
