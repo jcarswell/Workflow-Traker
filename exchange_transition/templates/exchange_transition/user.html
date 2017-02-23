@@ -5,7 +5,7 @@
  {% for step in steps %}
   <tr>
    <td>{{ step }}</td>
-   <td>{{ step.descrition }}</td>
+   <td>{{ step.description }}</td>
    <td><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()">Complete</button>
   </tr>
  {% endfor %}
