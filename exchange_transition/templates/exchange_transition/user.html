@@ -4,16 +4,16 @@
 <table class=table>
  {% for step in steps %}
   <tr>
-   <td>{{ step }}</td>
+   <td><b>{{ step }}</b></td>
    <td>{{ step.description }}</td>
-   <td><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()">Complete</button>
+   <td><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()" class="btn">Complete</button>
   </tr>
  {% endfor %}
 </table>
 <div class="block">
  <form method="post">
   <label for="comments">Comments</label><br>
-  <textarea name="comments">{{ user.comments }}</textarea><br>
+  <textarea name="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
   <div class="btn-group-submit">
    <input type="submit" class="btn" name="submit" value="Finish User" />
    <a href="{% url 'et_index' %}" class="btn">Return Home</a>
