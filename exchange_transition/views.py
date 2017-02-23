@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import loader
 from .models import User, UserStep, Step
@@ -34,15 +35,13 @@ def index(request):
             response.set_cookie('techname', techname, max_age=1000)
             return response
         else:
-            response = redirect('et_user', userAlias=useralias)
-            response.set_cookie('techname', techname, max_age=1000)
-            return response
+            return redirect(reverse('et_user', kwargs={'userAlias' : useralias}))
     elif request.method == 'GET':
         try:
             techname = request.COOKIES['techname']
         except:
-            techname = ""
-        
+            return HttpResponse(render(request, 'exchange_transition/index.html'))
+
         request.session.set_test_cookie()
         context = { 
             'users' : User.objects.order_by('name'),
@@ -66,7 +65,6 @@ def user(request, userAlias):
         raise Http404("User %s does not exist" % userAlias)
     request.session.set_test_cookie()
 
-    steps
     context = {
         'user' : user,
         'steps' : Step.objects.order_by('order'),
