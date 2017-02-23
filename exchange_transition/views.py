@@ -32,7 +32,7 @@ def index(request):
             }
             request.session.set_test_cookie()
             response = HttpResponse(render(request, 'exchange_transition/index.html', context))
-            response.set_cookie('techname', techname, max_age=1000)
+            response.set_cookie('techname', techname)
             return response
         else:
             return redirect(reverse('et_user', kwargs={'userAlias' : useralias}))
@@ -40,6 +40,7 @@ def index(request):
         try:
             techname = request.COOKIES['techname']
         except:
+            request.session.set_test_cookie()
             return HttpResponse(render(request, 'exchange_transition/index.html'))
 
         request.session.set_test_cookie()
