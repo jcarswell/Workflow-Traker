@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<a href="{% url 'et_manage_view_steps' %}" class="btn">Back to all steps</a>
+<form method="post">
+    {% csrf_token %}
+    <label>Order: </label>
+    <input type="input" class="txt-form" value="{{ order }}" disabled>
+    <br />
+    <label for="name">Name</label>
+    <input type="text" name="name" class="txt-form" value="{{ name }}" required/><br />
+    <label>Completed</label>
+    <input type="text" class="txt-form" value="{{ completed }}" disabled/><br />
+    <label for="description">Description</label><br />
+    <textarea name="description" rows="4" cols="80">{{ description }}</textarea><br />
+    <div class="btn-group-submit">
+        <input type="submit" name="submit" value="Save" class="btn" />
+        <input type="submit" name="submit" value="Delete" class="btn btn-delete" />
+    </div>
+</form>
+
+{% endblock %}

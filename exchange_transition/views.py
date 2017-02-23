@@ -136,33 +136,6 @@ def manage_report(request, userAlias=None, orderId=None):
         }
         return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
 
-def manage_delete_step(request, orderId):
-    if request.metord != 'POST':
-        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
-    
-    try:
-        step = Step.opbjects.get(order=order)
-    except Step.DoesNotExist:
-        return HttpResponse("Step with at %s does not exist" % str(order))
-    
-    name = step.name
-    step.delete()
-    Step_Helper().reorder()
-    return HttpResponse("Step %s. %s was removed successfully" % (str(order), name))
-
-def manage_delete_user(request, userAlias):
-    if request.metord != 'POST':
-        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
-    
-    try:
-        userDel = User.objects.get(alias=userAlias)
-    except User.DoesNotExist:
-        return HttpResponse("User with alias %s does not exist" % userAlias)
-    
-    userName = userDel.name
-    userDel.delete()
-    return HttpResponse("User %s was removed Successfully" % userName)
-
 def manage_new_step(request):
     if request.method == 'POST':
         try:
@@ -239,3 +212,89 @@ def manage_new_user(request):
 
     else:
         return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
+
+def manage_user(request, userAlias):
+    try:
+        currentUser = User.objects.get(alias=userAlias)
+    except:
+        raise Http404("Error: User not found")
+    
+    if request.method == 'POST':
+        try:
+            userName = request.POST['name']
+            userAlias = request.POST['alias']
+            try:
+                returnAction = request.POST['submit']
+            except:
+                returnAction = "Save"
+        except ValueError:
+            return HttpResponse("Error all fields are required")
+        if returnAction == "Save":
+            currentUser.name = userName
+            currentUser.alias = userAlias
+            currentUser.save()
+            return redirect('et_manage_view_users')
+        elif returnAction == "Delete":
+            currentUser.delete()
+            return redirect('et_manage_view_users')
+        else:
+            return redirect('et_manage_view_users')
+
+    elif request.method == 'GET':
+        if currentUser.completed:
+            completed = "Yes"
+        else:
+            completed = "%s/%s" % (UserStep.objects.filter(user=currentUser).filter(completed=True).count(),
+                UserStep.objects.filter(user=currentUser).count())
+        context = {
+            "name" : currentUser.name,
+            "alias" : currentUser.alias,
+            "completed" : completed,
+            "completedBy" : currentUser.completedBy,
+            "comments" : currentUser.comments,
+        }
+        return HttpResponse(render(request, 'exchange_transition/admin_user.html', context))
+
+    else:
+        return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
+
+def manage_step(request, orderId):
+    try:
+        currentStep = Step.objects.get(order=orderId)
+    except:
+        raise Http404("Error: Step does not exist")
+    if request.method == 'POST':
+        try:
+            name = request.POST['name']
+            description = request.POST['description']
+            try:
+                returnAction = request.POST['submit']
+            except:
+                returnAction = "Save"
+        except:
+            pass
+        if returnAction == "Save":
+            currentStep.name = name
+            currentStep.description = description
+            currentStep.save()
+            return redirect('et_manage_view_steps')
+        elif returnAction == "Delete":
+            currentStep.delete()
+            Step_Helper().reorder()
+            return redirect('et_manage_view_steps')
+        else:
+            return redirect('et_manage_view_steps')
+            
+    elif request.method == 'GET':
+        context = {
+            "order" : currentStep.order,
+            "description" : currentStep.description,
+            "name" : currentStep.description,
+            "completed" : "%s/%s" % (UserStep.objects.filter(step=currentStep).filter(completed=True).count(),
+                UserStep.objects.filter(step=currentStep).count()),
+        }
+        return HttpResponse(render(request, 'exchange_transition/admin_step.html', context))
+    
+    else: 
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+ 

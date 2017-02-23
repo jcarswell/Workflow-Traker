@@ -21,7 +21,7 @@
             {% else %}
                 <td><span class="glyphicon glyphicon-remove"></span></td>
             {% endif %}
-            <td>{{ user.name }}</td>
+            <td><a href="{% url 'et_manage_user' userAlias=user.alias %}">{{ user.name }}</a></td>
             <td>{{ user.alias }}</td>
             {% if user.completedOn %}
                 <td>{{ user.completedOn }}</td>

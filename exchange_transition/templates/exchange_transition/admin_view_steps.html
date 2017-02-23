@@ -15,7 +15,7 @@
         {% for step in steps %}
             <tr>
                 <td>{{ step.order }}</td>
-                <td>{{ step.name }}</td>
+                <td><a href="{% url 'et_manage_step' orderId=step.order %}">{{ step.name }}</td>
             </tr>
         {% endfor %}
     {% endif %}

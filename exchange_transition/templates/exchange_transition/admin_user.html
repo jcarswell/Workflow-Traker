@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+{% endblock %}
+
+{% block body %}
+<a href="{% url 'et_manage_view_users' %}" class="btn">Back to all users</a>
+<form method="post">
+    {% csrf_token %}
+    <label for="name">Full Name  </label>
+    <input type="text" name="name" class="txt-form" value="{{ name }}"required/><br/>
+    <label for="alias">User Alias </label>
+    <input type="text" name="alias" class="txt-form" value="{{ alias }}" required/><br/>
+    <label>Completed</label>
+    <input type="text" class="txt-form" value="{{ completed }}" disabled/><br/>
+    <label>Completed By</label>
+    <input type="text" class="txt-form" value="{{ completedBy }}" disabled/><br/>
+    <label>Comments</label>
+    <textarea rows="4" cols="80" disabled>{{ comments }}</textarea><br/>
+    <div class="btn-group-submit">
+        <input type="submit" name="submit" value="Save" class="btn"/>
+        <input type="submit" name="submit" value="Delete" class="btn btn-delete"/>
+    </div>
+</form>
+{% endblock %}
+
