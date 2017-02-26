@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "css/base.css" %}">
     <link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}">
+    {% block headextra %}{% endblock %}
 </head>
 <body>
  <nav class="navbar navbar-green navbar-fixed-top">
@@ -35,33 +36,6 @@
     <ul class="nav navbar-bar">
      <li><a href="/" class="font-white">Home</a></li>
      {% block navbar %}
-     <!--<li class="dropdown">
-      <a href="#" class="dropdown-toggle font-white" data-toggle="dropdown" 
-          role="button" aria-haspopup="true" aria-expanded="false">
-       Backups <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-       <li><a href="#">Current</a></li>
-       <li><a href="#">Archive</a></li>
-       <li><a href="#">Auto</a></li>
-      </ul>
-     </li>
-     <li class="dropdown">
-      <a href="#" class="dropdown-toggle font-white" data-toggle="dropdown"
-          role="button" aria-haspopup="true" aria-expanded="false">
-       Documents <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-       <li role="separator" class="separator">Documentation</li>
-       <li><a href="#">Vlan Segments</a></li>
-       <li><a href="#">Vlan List</a></li>
-       <li><a href="#">IP Sheet</a></li>
-       <li role="separator" class="separator">Templates</li>
-       <li><a href="#">Switch Template</a></li>
-       <li><a href="#">VPN Template</a></li>
-      </ul>
-     </li>
-     <li><a href="#" class="font-white">links</a></li>-->
      {% endblock %}
     </ul>
    </div><!--/.nav-collapse-->
@@ -79,6 +53,7 @@
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
       crossorigin="anonymous"></script>
+ {% block scriptend %}{% endblock %}
 </body>
 </html>
 
