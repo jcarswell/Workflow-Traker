@@ -106,10 +106,9 @@ class Step_Helper():
             orderAdd    : take an integer and is the order ID
                 that a new Step is to be saved
         """
-        stepOrderCurrent = Step.objects.order_by('-order')[1].order
+        stepOrderCurrent = Step.objects.order_by('-order')[1].order + 1
         while stepOrderCurrent >= orderAdd:
             try:
-                print("retriving step %i" % stepOrderCurrent)
                 stepCurrent = Step.objects.get(order=stepOrderCurrent)
             except Step.DoesNotExist:
                 self.reorder() #call the reorder function incase theres a gap and try again
