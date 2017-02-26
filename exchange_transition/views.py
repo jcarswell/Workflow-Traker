@@ -158,10 +158,10 @@ def manage_new_step(request):
             else:
                 UserStep_Helper().addStep(order)
         if returnAction == "Save":
-            return redirect(reverse('manage_view_step'))
+            return redirect(reverse('et_manage_view_steps'))
         else:
             context = {
-                "stepcount" : range(1, lastStepOrder + 2),
+                "stepcount" : range(1, Step.objects.order_by('-order')[0].order + 2),
                 "added" : True,
             }
             return HttpResponse(render(request, 'exchange_transition/admin_new_step.html', context))
@@ -233,12 +233,12 @@ def manage_user(request, userAlias):
             currentUser.name = userName
             currentUser.alias = userAlias
             currentUser.save()
-            return redirect('et_manage_view_users')
+            return redirect(reverse('et_manage_view_users'))
         elif returnAction == "Delete":
             currentUser.delete()
-            return redirect('et_manage_view_users')
+            return redirect(reverse('et_manage_view_users'))
         else:
-            return redirect('et_manage_view_users')
+            return redirect(reverse('et_manage_view_users'))
 
     elif request.method == 'GET':
         if currentUser.completed:
