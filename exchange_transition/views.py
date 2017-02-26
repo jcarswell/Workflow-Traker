@@ -203,7 +203,7 @@ def manage_new_user(request):
                 UserStep_Helper().addUser(userAlias)
         
         if returnAction == "Save":
-            return redirect(reverse('et_manage_view_user'))
+            return redirect(reverse('et_manage_view_users'))
         else:
             return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', {"added" : True}))
         
