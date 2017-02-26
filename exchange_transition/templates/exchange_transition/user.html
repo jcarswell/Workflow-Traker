@@ -4,9 +4,9 @@
 <table class=table>
  {% for step in steps %}
   <tr>
-   <td><b>{{ step }}</b></td>
-   <td>{{ step.description }}</td>
-   <td><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()" class="btn">Complete</button>
+   <td class='user-td-col1'><b>{{ step }}</b></td>
+   <td class='user-td-col2'><textarea>{{ step.description }}</textarea></td>
+   <td class='user-td-col3'><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()" class="btn">Complete</button>
   </tr>
  {% endfor %}
 </table>
