@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 {% block body %}
 <h1>{{ user.name }}</h1>
+<p id="response"></p>
 <table class=table>
  {% for step in steps %}
   <tr>
    <td class='user-td-col1'><b>{{ step }}</b></td>
-   <td class='user-td-col2'><textarea>{{ step.description }}</textarea></td>
-   <td class='user-td-col3'><button type="button" name="{{ step.order }}" value="Complete" onclick="stepSubmit()" class="btn">Complete</button>
+   <td class='user-td-col2'><textarea disabled>{{ step.description }}</textarea></td>
+   <td class='user-td-col3'><button type="button" name="{{ step.order }}" value="Complete" class="btn">Complete</button>
   </tr>
  {% endfor %}
 </table>
 <div class="block">
  <form method="post">
+  {% csrf_token %}
   <label for="comments">Comments</label><br>
   <textarea name="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
+  <input type="hidden" name="data" value="user">
   <div class="btn-group-submit">
    <input type="submit" class="btn" name="submit" value="Finish User" />
    <a href="{% url 'et_index' %}" class="btn">Return Home</a>
@@ -21,4 +24,46 @@
  </form>
 </div>
     
+{% endblock %}
+{% block scriptend %}
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+$(function() {
+    $('textarea').each(function() {
+        $(this).height($(this).prop('scrollHeight'));
+    });
+});
+$("button").click(function() {
+    $.post(location.href, {
+        "data" : "step"
+        "step" : $(this).attr("name"),
+        "comments" : $('#comments').val(),
+        "csrfmiddlewaretoken" : getCookie('csrftoken'),
+        "techname" : getCookie('techname')
+    }, function(data, status) {
+        if (data == "success") {
+            $(this).attr("disabled", true);
+            $(this).text("<span class='font-white glyphicon glyphicon-ok'></span>");
+        } else {
+            $(this).addClass("submit-error");
+            $(this).text("<span class='font-white glyphicon glyphicon-remove'></span>");
+        }
+    });
+});
+
+</script>
 {% endblock %}

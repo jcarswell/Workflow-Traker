@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import loader
+from datetime import datetime
 from .models import User, UserStep, Step
 from .helper import *
 
@@ -64,8 +65,40 @@ def user(request, userAlias):
         user = User.objects.get(alias=userAlias)
     except Users.DoesNotExist:
         raise Http404("User %s does not exist" % userAlias)
-    request.session.set_test_cookie()
 
+    if request.method == 'POST':
+        try:
+            postType = request.POST['data']
+        except:
+            return HttpResponse("Error: no post type received")
+        
+        if postType == "step":
+            try:
+                postOrder = Step.objects.get(order=int(request.POST['step']))
+                postComments = request.POST['comments']
+            except:
+                HttpResponse("Error: invalid data received")
+            
+            try:
+                us = UserStep.objects.filter(user=user).get(step=postOrder)
+            except:
+                us = UserSetp(user=user,step=postOrder)
+
+            us.completedBy = techname
+            us.completedOn = datetime.now()
+            us.completed = True
+            us.save()
+            user.comments = postComments
+            user.save()
+            return HttpResponse("success")
+        elif postType == "user":
+            user.completedBy = techname
+            user.completedOn = datetime.now()
+            user.completed = True
+            user.save()
+            return redirect(reverse('et_index'))
+        else:
+            return HttpResponse("Error: invalid post type")
     context = {
         'user' : user,
         'steps' : Step.objects.order_by('order'),
