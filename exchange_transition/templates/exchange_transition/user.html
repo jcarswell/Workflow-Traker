@@ -5,9 +5,13 @@
 <table class=table>
  {% for step in steps %}
   <tr>
-   <td class='user-td-col1'><b>{{ step }}</b></td>
-   <td class='user-td-col2'><textarea disabled>{{ step.description }}</textarea></td>
-   <td class='user-td-col3'><button type="button" name="{{ step.order }}" value="Complete" class="btn">Complete</button>
+   <td class='user-td-col1'><b>{{ step.step }}</b></td>
+   <td class='user-td-col2'><textarea disabled>{{ step.step.description }}</textarea></td>
+   {% if step.completed %}
+    <td class='user-td-col3'><button type="button" class="btn glyphicon glyphicon-ok" disabled></button>
+   {% else %}
+    <td class='user-td-col3'><button type="button" name="{{ step.step.order }}" class="btn">Complete</button>
+   {% endif %}
   </tr>
  {% endfor %}
 </table>

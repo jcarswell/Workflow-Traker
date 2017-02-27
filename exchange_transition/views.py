@@ -100,9 +100,21 @@ def user(request, userAlias):
             return redirect(reverse('et_index'))
         else:
             return HttpResponse("Error: invalid post type")
+    
+    stepsArray = []
+    for step in Step.objects.all():
+        try:
+            completed = UserStep.objects.filter(user=user).get(step=step).completed
+        except:
+            completed = False
+        stepsArray.append({ 
+            "step" : step,
+            "completed" : completed,
+            })
+
     context = {
         'user' : user,
-        'steps' : Step.objects.order_by('order'),
+        'steps' : stepsArray,
         }
     return HttpResponse(render(request, 'exchange_transition/user.html', context))
 
