@@ -69,13 +69,13 @@ def user(request, userAlias):
     if request.method == 'POST':
         try:
             postType = request.POST['data']
+            postComments = request.POST['comments']
         except:
             return HttpResponse("Error: no post type received")
         
         if postType == "step":
             try:
                 postOrder = Step.objects.get(order=int(request.POST['step']))
-                postComments = request.POST['comments']
             except:
                 return HttpResponse("Error: invalid data received")
             
@@ -92,6 +92,7 @@ def user(request, userAlias):
             user.save()
             return HttpResponse("success")
         elif postType == "user":
+            user.comments = postComments
             user.completedBy = techname
             user.completedOn = timezone.now()
             user.completed = True
