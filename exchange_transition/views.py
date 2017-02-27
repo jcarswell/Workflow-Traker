@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import loader
-from datetime import datetime
+from django.utils import timezone
 from .models import User, UserStep, Step
 from .helper import *
 
@@ -77,15 +77,15 @@ def user(request, userAlias):
                 postOrder = Step.objects.get(order=int(request.POST['step']))
                 postComments = request.POST['comments']
             except:
-                HttpResponse("Error: invalid data received")
+                return HttpResponse("Error: invalid data received")
             
             try:
                 us = UserStep.objects.filter(user=user).get(step=postOrder)
             except:
-                us = UserSetp(user=user,step=postOrder)
+                us = UserStep(user=user,step=postOrder)
 
             us.completedBy = techname
-            us.completedOn = datetime.now()
+            us.completedOn = timezone.now()
             us.completed = True
             us.save()
             user.comments = postComments
@@ -93,7 +93,7 @@ def user(request, userAlias):
             return HttpResponse("success")
         elif postType == "user":
             user.completedBy = techname
-            user.completedOn = datetime.now()
+            user.completedOn = timezone.now()
             user.completed = True
             user.save()
             return redirect(reverse('et_index'))

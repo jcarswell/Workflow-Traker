@@ -26,3 +26,4 @@ td>textarea { border: none; resize: none; width: 100%; box-sizing: border-box; b
 .flt-right { float: right; }
 .btn-delete { float: left; background-color: rgb(192,0,0); box-shadow: 0px 0px 5px rgba(110,0,0,0.4); }
 .submit-error { background: rgb(242, 33, 33); } 
+.btn[disabled]:hover { cursor: default; opacity: none; color: #fff; }

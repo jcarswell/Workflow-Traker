@@ -15,7 +15,7 @@
  <form method="post">
   {% csrf_token %}
   <label for="comments">Comments</label><br>
-  <textarea name="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
+  <textarea name="comments" id="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
   <input type="hidden" name="data" value="user">
   <div class="btn-group-submit">
    <input type="submit" class="btn" name="submit" value="Finish User" />
@@ -48,19 +48,21 @@ $(function() {
     });
 });
 $("button").click(function() {
+    var thisButton = $(this).attr("name");
     $.post(location.href, {
-        "data" : "step"
-        "step" : $(this).attr("name"),
-        "comments" : $('#comments').val(),
+        "data" : "step",
+        "step" : thisButton,
+        "comments" : $("#comments").val(),
         "csrfmiddlewaretoken" : getCookie('csrftoken'),
         "techname" : getCookie('techname')
     }, function(data, status) {
         if (data == "success") {
-            $(this).attr("disabled", true);
-            $(this).text("<span class='font-white glyphicon glyphicon-ok'></span>");
+            $("button[name=" + thisButton + "]").attr("disabled", true);
+            $("button[name=" + thisButton + "]").addClass("glyphicon glyphicon-ok");
+            $("button[name=" + thisButton + "]").text("");
         } else {
-            $(this).addClass("submit-error");
-            $(this).text("<span class='font-white glyphicon glyphicon-remove'></span>");
+            $("button[name=" + thisButton + "]").addClass("submit-error font-white glyphicon glyphicon-remove");
+            $("button[name=" + thisButton + "]").text("<span class='font-white glyphicon glyphicon-remove'></span>");
         }
     });
 });
