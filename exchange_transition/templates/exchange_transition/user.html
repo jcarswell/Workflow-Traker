@@ -22,7 +22,11 @@
   <textarea name="comments" id="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
   <input type="hidden" name="data" value="user">
   <div class="btn-group-submit">
-   <input type="submit" class="btn" name="submit" value="Finish User" />
+   {% if user.completed %}
+    <input type="submit" class="btn" name="submit" value="Finish User" disabled/>
+   {% else %}
+    <input type="submit" class="btn" name="submit" value="Finish User" />
+   {% endif %}
    <a href="{% url 'et_index' %}" class="btn">Return Home</a>
   </div>
  </form>
