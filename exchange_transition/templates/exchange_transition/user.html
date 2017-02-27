@@ -7,7 +7,7 @@
   <tr>
    <td class='user-td-col1'><b>{{ step.step }}</b></td>
    <td class='user-td-col2'><textarea disabled>{{ step.step.description }}</textarea></td>
-   {% if step.completed %}
+   {% if step.completed or user.completed %}
     <td class='user-td-col3'><button type="button" class="btn glyphicon glyphicon-ok" disabled></button>
    {% else %}
     <td class='user-td-col3'><button type="button" name="{{ step.step.order }}" class="btn">Complete</button>
@@ -16,7 +16,7 @@
  {% endfor %}
 </table>
 <div class="block">
- <form method="post">
+ <form method="post" id="user-complete">
   {% csrf_token %}
   <label for="comments">Comments</label><br>
   <textarea name="comments" id="comments" rows="4" cols="80">{{ user.comments }}</textarea><br>
@@ -70,10 +70,13 @@ $("button").click(function() {
             $("button[name=" + thisButton + "]").text("");
         } else {
             $("button[name=" + thisButton + "]").addClass("submit-error font-white glyphicon glyphicon-remove");
-            $("button[name=" + thisButton + "]").text("<span class='font-white glyphicon glyphicon-remove'></span>");
+            $("button[name=" + thisButton + "]").text("");
         }
     });
 });
-
+$("#user-complete").submit(function() {
+    var c = confirm("This action cannot be undone, continue?");
+    return c;
+});
 </script>
 {% endblock %}
