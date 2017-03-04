@@ -191,10 +191,17 @@ def manage_new_step(request):
                 returnAction = request.POST['submit']
             except:
                 returnAction = "Save"
+            try:
+                if request.POST['optional'] == "optional":
+                    optional = True
+                else:
+                    optional = False
+            except:
+                optional = False
         except ValueError:
             return HttpResponse("Error All fields are requred")
         else:
-            newStep = Step(order=order, name=name, description=description)
+            newStep = Step(order=order, name=name, description=description, optional=optional)
             Step_Helper().preSave(order)
             try:
                 newStep.save()
@@ -317,11 +324,19 @@ def manage_step(request, orderId):
                 returnAction = request.POST['submit']
             except:
                 returnAction = "Save"
+            try:
+                if request.POST['optional'] == "optional":
+                    optional = True
+                else:
+                    optional = False
+            except:
+                optional = False
         except:
             pass
         if returnAction == "Save":
             currentStep.name = name
             currentStep.description = description
+            currentStep.optional = optional
             currentStep.save()
             return redirect('et_manage_view_steps')
         elif returnAction == "Delete":
@@ -336,6 +351,7 @@ def manage_step(request, orderId):
             "order" : currentStep.order,
             "description" : currentStep.description,
             "name" : currentStep.name,
+            "optional" : currentStep.optional,
             "completed" : "%s/%s" % (UserStep.objects.filter(step=currentStep).filter(completed=True).count(),
                 UserStep.objects.filter(step=currentStep).count()),
         }

@@ -8,11 +8,17 @@
 <a href="{% url 'et_manage_view_steps' %}" class="btn">Back to all steps</a>
 <form method="post">
     {% csrf_token %}
-    <label>Order: </label>
+    <label>Order</label>
     <input type="input" class="txt-form" value="{{ order }}" disabled>
     <br />
     <label for="name">Name</label>
     <input type="text" name="name" class="txt-form" value="{{ name }}" required/><br />
+    <label for="optional">Optional</label>
+    {% if optional %}
+        <input type="checkbox" name="optional" value="optional" checked/><br />
+    {% else %}
+        <input type="checkbox" name="optional" value="optional"/><br />
+    {% endif %} 
     <label>Completed</label>
     <input type="text" class="txt-form" value="{{ completed }}" disabled/><br />
     <label for="description">Description</label><br />
