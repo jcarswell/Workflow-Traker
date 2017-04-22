@@ -147,19 +147,18 @@ def manage_view_steps(request, stepAdded=None):
     }
     return HttpResponse(render(request, 'exchange_transition/admin_view_steps.html', context))
 
+def manage_report_export(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="detailed_report.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['User Name', 'User Alias', 'step', 'completed', 'completedBy', 'completedOn'])
+    for us in UserStep.objects.all():
+        writer.writerow([us.user.name, us.user.alias, us.step, us.completed, us.completedBy, us.completedOn])
+
+    return response
+
 def manage_report(request):
-    if request.method == 'POST':
-        if 'export' in request.POST:
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="detailed_report.csv"'
-
-            writer = csv.writer(response)
-            writer.writerow(['User Name', 'User Alias', 'step', 'completed', 'completedBy', 'completedOn'])
-            for us in UserStep.objects.all():
-                writer.writerow([us.user.name, us.user.alias, us.step, us.completed, us.completedBy, us.completedOn])
-
-            return response
-
     if request.method != 'GET': 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 

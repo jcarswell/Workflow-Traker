@@ -16,7 +16,7 @@
 
 {% block body %}
 <h1>Current Status</h1>
-<button type="bytton" class="btn" name="export" value="True">Export CSV</button>
+<a href="{% url 'et_manage_report_export' %}" target="_blank"class="btn">Export CSV</a>
 <div id="statusblock">
  <p>&nbsp;Current Progress: {{ currentProgress }}</p>
  <p>Users Not Started: {{ userNotStarted }}</p>
@@ -47,30 +47,3 @@
  {% endfor %}
 </table>
 {% endblock %}
-
-{% block scriptend %}
-<script>
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-$("button").click(function () {
-    $.post(location.href, { "export" : "True", "csrfmiddlewaretoken" : getCookie('csrftoken'), }, function(retData) {
-        $("body").append("<iframe src='" + retData.url + "' style='display: none;' ></iframe>");
-    });
-});
-</script>
-{% endblock %}
-
-
