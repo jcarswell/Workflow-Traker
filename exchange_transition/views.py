@@ -198,7 +198,7 @@ def manage_report(request):
     userCompleted = 0
     userCompletedish = 0
     stepNotOptional = Step.objects.filter(optional=False)
-    stepNotOptionalCount = stepNotOptional.count()
+    stepNotOptCount = stepNotOptional.count()
     
     for user in User.objects.all():
         stepsComplete = 0
@@ -209,7 +209,7 @@ def manage_report(request):
         users.append({
             "name" : user.name,
             "alias" : user.alias,
-            "steps" : "{}/{} ({:.0%})".format(stepsComplete,stepNotOptionalCount,int(stepsComplete/stepNotOptionalCount)),
+            "steps" : "{}/{} ({:.0%})".format(stepsComplete,stepNotOptCount,stepsComplete/stepNotOptCount),
             "completed" : user.completed,
             "completedBy" : user.completedBy or "-",
             "completedOn" : user.completedOn or "-",
@@ -218,18 +218,18 @@ def manage_report(request):
             userNotStarted  += 1
         elif user.completed:
             userCompleted += 1
-            if stepsComplete < stepNotOptionalCount:
+            if 0 < stepsComplete < stepNotOptCount:
                 userCompletedish += 1
-        elif 0 < stepsComplete < stepNotOptionalCount:
+        elif 0 < stepsComplete < stepNotOptCount:
             userInProgress += 1
 
     context = {
         "users" : users,
-        "userNotStarted" : userNotStarted,
-        "userInProgress" : userInProgress,
-        "userCompleted" : userCompleted,
-        "userCompletedish" : userCompletedish,
-        "currentProgress" : "{:.0%}".format(user.completed/User.objects.count()),
+        "userNotStarted" : userNotStarted or "0",
+        "userInProgress" : userInProgress or "0",
+        "userCompleted" : userCompleted or "0",
+        "userCompletedish" : userCompletedish or "0",
+        "currentProgress" : "{:.0%}".format((userCompleted + (userInProgress * 0.5))/User.objects.count()),
     }
     return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
 
