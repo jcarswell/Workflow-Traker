@@ -33,7 +33,7 @@ def index(request):
             useralias = request.POST['useralias']
         except:
             context = { 
-                'users' : User.objects.order_by('name'),
+                'users' : User.objects.filter(completed=False).order_by('name'),
                 'techname' : techname,
             }
             request.session.set_test_cookie()
