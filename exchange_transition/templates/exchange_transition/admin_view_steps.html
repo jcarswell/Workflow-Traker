@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 
 {% block navbar %}
-<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+<li class="dropdown"><a href="#" class="dropdown-toggle font-white" data-toggle="dropdown"
+    role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret">
+    </span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+        <li><a href="{% url 'et_manage_view_users' %}" class="font-white">Users</a></li>
+        <li><a href="{% url 'et_manage_view_steps' %}" class="font-white">Steps</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'et_manage_report' %}" class="font-white">Report</a></li>
+    </ul>
+</li>
 {% endblock %}
 
 {% block body %}
