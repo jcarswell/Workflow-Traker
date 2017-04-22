@@ -123,35 +123,6 @@ def user(request, userAlias):
         }
     return HttpResponse(render(request, 'exchange_transition/user.html', context))
 
-def submit(request):
-    if request.method != 'POST':
-        return redirect(index)
-    else:
-        if 'techname' in request.COOKIES:
-            techname = request.COOKIES['techname']
-        else:
-            return HttpResponse("Technician name not available, please return to the main page a try again")
-
-        try:
-            redirectURL = request.POST['redirect']
-        except:
-            redirectURL = ''
-
-        if request.session.test_cookie_worked():
-            request.session.delete_test_cookie()
-            return redirect(redirectURL)
-        else:
-            return HttpResponse("Cookies are required to use this site, please enable cookies and try again")
-        try:
-            user = User.objects.get(name=username)
-            try:
-                step = user.UserStep_set.get(step=request.POST['stepOrder'])
-            except user.UserStep_set.DoesNotExist:
-                raise Http404("Invalid step ID")
-            # check if step exist or raise 404
-        except Users.DoesNotExist:
-            raise Http404("User %s does not exist" % username)
-
 def manage_root(request):
     if request.method != 'GET':
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
