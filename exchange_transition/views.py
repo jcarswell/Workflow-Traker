@@ -1,12 +1,17 @@
+#Python Libraries
+import csv
+from itertools import groupby
+
+#Django Libraries
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import loader
 from django.utils import timezone
+
+#Project Libraries
 from .models import User, UserStep, Step
 from .helper import *
-
-# Create your views here.
 
 def index(request):
     if request.method == 'POST':
@@ -171,15 +176,110 @@ def manage_view_steps(request, stepAdded=None):
     }
     return HttpResponse(render(request, 'exchange_transition/admin_view_steps.html', context))
 
-def manage_report(request, userAlias=None, orderId=None):
+def manage_report(request):
+    if request.method == 'POST':
+        if 'export' in request.POST:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="detailed_report.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['User Name', 'User Alias', 'step', 'completed', 'completedBy', 'completedOn'])
+            for us in UserStep.objects.all():
+                writer.writerow([us.user.name, us.user.alias, us.step, us.completed, us.completedBy, us.completedOn])
+
+            return response
+
     if request.method != 'GET': 
-        raise HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
-    if request.method == 'GET':
-        usersteps = UserStep.objects.order_by('user')
-        context = {
-            "userstep" : userstep,
+        return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
+
+    users = []
+    userNotStarted = 0
+    userInProgress = 0
+    userCompleted = 0
+    userCompletedish = 0
+    stepNotOptional = Step.objects.filter(optional=False)
+    stepNotOptionalCount = stepNotOptional.count()
+    
+    for user in User.objects.all():
+        stepsComplete = 0
+        for step in stepNotOptional:
+            if UserStep.objects.filter(user=user).get(step=step).completed:
+                stepsComplete += 1
+
+        users.append({
+            "name" : user.name,
+            "alias" : user.alias,
+            "steps" : "{}/{} ({:.0%})".format(stepsComplete,stepNotOptionalCount,int(stepsComplete/stepNotOptionalCount)),
+            "completed" : user.completed,
+            "completedBy" : user.completedBy or "-",
+            "completedOn" : user.completedOn or "-",
+        })
+        if stepsComplete == 0:
+            userNotStarted  += 1
+        elif user.completed:
+            userCompleted += 1
+            if stepsComplete < stepNotOptionalCount:
+                userCompletedish += 1
+        elif 0 < stepsComplete < stepNotOptionalCount:
+            userInProgress += 1
+
+    context = {
+        "users" : users,
+        "userNotStarted" : userNotStarted,
+        "userInProgress" : userInProgress,
+        "userCompleted" : userCompleted,
+        "userCompletedish" : userCompletedish,
+        "currentProgress" : "{:.0%}".format(user.completed/User.objects.count()),
+    }
+    return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
+
+def manage_report_user(request, userAlias):
+    try:
+        user = User.objects.get(alias=userAlias)
+    except Users.DoesNotExist:
+        return Http404("User %s does not exist" % userAlias)
+    
+    stepsArray = []
+    stepsComplete = 0
+    stepsCompleteNotOpt = 0
+    stepsNotOptional = 0
+    stepsCount = 0
+
+    for step in Step.objects.all():
+        try:
+            userStepData = UserStep.objects.filter(user=user).get(step=step)
+            stepsArray.append({
+                "step" : str(step),
+                "completed" : userStepData.completed,
+                "completedBy" : userStepData.completedBy or "-",
+                "completedOn" : userStepData.completedOn or "-",
+                })
+            if userStepData.completed:
+                stepsComplete += 1
+                if not step.optional:
+                    stepsCompleteNotOpt += 1
+        except Exception as e:
+            stepsArray.append({
+                "step" : str(step),
+                "completed" : False,
+            })
+
+        if not step.optional:
+           stepsNotOptional += 1
+
+        stepsCount += 1
+
+    
+
+    context = {
+        'user' : user,
+        'completedBy' : user.completedBy or "-",
+        'progress' : "{} of {}".format(stepsComplete,stepsCount),
+        'pprogress' : "{:.0%}".format(stepsCompleteNotOpt/stepsNotOptional),
+        'steps' : stepsArray,
         }
-        return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
+    return HttpResponse(render(request, 'exchange_transition/admin_report_user.html', context))
+
 
 def manage_new_step(request):
     if request.method == 'POST':

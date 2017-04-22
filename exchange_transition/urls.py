@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^Manage/users/$', views.manage_view_users, name='et_manage_view_users'),
     url(r'^Manage/steps/$', views.manage_view_steps, name='et_manage_view_steps'),
     url(r'^Manage/report/$', views.manage_report, name='et_manage_report'),
+    url(r'^Manage/report/(?P<userAlias>[a-zA-Z0-9\-_.]+)/$', views.manage_report_user, name='et_manage_report_user'),
     url(r'^Manage/user/$', views.manage_new_user, name='et_manage_new_user'),
     url(r'^Manage/step/$', views.manage_new_step, name='et_manage_new_step'),
     url(r'^Manage/user/(?P<userAlias>[a-zA-Z0-9\-_.]+)/$', views.manage_user, name='et_manage_user'),

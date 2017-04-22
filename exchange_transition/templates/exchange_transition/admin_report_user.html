@@ -5,34 +5,28 @@
 {% endblock %}
 
 {% block body %}
-<h1>Current Status</h1>
-<button type="bytton" class="btn" name="export" value="True">Export CSV</button>
+<h1>{{ user }} ({{ user.alias }})</h1>
 <div id="statusblock">
- <p>&nbsp;Current Progress: {{ currentProgress }}</p>
- <p>Users Not Started: {{ userNotStarted }}</p>
- <p>Users In Progress: {{ userInProgress }}</p>
- <p>&nbsp;&nbsp;Users Completed: {{ userCompleted }}</p>
- <p>&nbsp;&nbsp;&rarr;Without all steps: {{ userCompleteish }}</p>
+ <p>Current Progress: {{ pprogress }} *not including optional steps</p>
+ <p>Steps Completed: {{ progress }}</p>
 </div><br />
 <table class="table">
  <tr>
-  <th>User</th>
-  <th>Steps</th>
   <th>Completed</th>
+  <th>Step</th>
   <th>Completed By</th>
   <th>Completed On</th>
  </tr>
- {% for user in users %}
+ {% for step in steps %}
  <tr>
-  <td><a href="{% url 'et_manage_report_user' userAlias=user.alias %}">{{ user.name }}</a></td>
-  <td>{{ user.steps }}</td>
-  {% if user.completed %}
+  {% if step.completed %}
   <td><span class="glyphicon glyphicon-ok"></span></td>
   {% else %}
   <td><span class="glyphicon glyphicon-remove"></span></td>
   {% endif %}
-  <td>{{ user.completedBy }}</td>
-  <td>{{ user.completedOn }}</td>
+  <td>{{ step.step }}</td>
+  <td>{{ step.completedBy }}</td>
+  <td>{{ step.completedOn }}</td>
  </tr>
  {% endfor %}
 </table>
