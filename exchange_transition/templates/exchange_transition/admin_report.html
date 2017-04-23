@@ -1,10 +1,49 @@
 {% extends 'base.html' %}
 
 {% block navbar %}
-<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+<li class="dropdown"><a href="#" class="dropdown-toggle font-white" data-toggle="dropdown"
+    role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret">
+    </span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+        <li><a href="{% url 'et_manage_view_users' %}" class="font-white">Users</a></li>
+        <li><a href="{% url 'et_manage_view_steps' %}" class="font-white">Steps</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'et_manage_report' %}" class="font-white">Report</a></li>
+    </ul>
+</li>
 {% endblock %}
 
 {% block body %}
-
+<h1>Current Status</h1>
+<a href="{% url 'et_manage_report_export' %}" target="_blank"class="btn">Export CSV</a>
+<div id="statusblock">
+ <p>&nbsp;Current Progress: {{ currentProgress }}</p>
+ <p>Users Not Started: {{ userNotStarted }}</p>
+ <p>Users In Progress: {{ userInProgress }}</p>
+ <p>&nbsp;&nbsp;Users Completed: {{ userCompleted }}</p>
+ <p>&nbsp;&nbsp;&rarr;Without all steps: {{ userCompletedish }}</p>
+</div><br />
+<table class="table">
+ <tr>
+  <th>User</th>
+  <th>Steps</th>
+  <th>Completed</th>
+  <th>Completed By</th>
+  <th>Completed On</th>
+ </tr>
+ {% for user in users %}
+ <tr>
+  <td><a href="{% url 'et_manage_report_user' userAlias=user.alias %}">{{ user.name }}</a></td>
+  <td>{{ user.steps }}</td>
+  {% if user.completed %}
+  <td><span class="glyphicon glyphicon-ok"></span></td>
+  {% else %}
+  <td><span class="glyphicon glyphicon-remove"></span></td>
+  {% endif %}
+  <td>{{ user.completedBy }}</td>
+  <td>{{ user.completedOn }}</td>
+ </tr>
+ {% endfor %}
+</table>
 {% endblock %}
-

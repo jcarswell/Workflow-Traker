@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<li class="dropdown"><a href="#" class="dropdown-toggle font-white" data-toggle="dropdown"
+    role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret">
+    </span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+        <li><a href="{% url 'et_manage_view_users' %}" class="font-white">Users</a></li>
+        <li><a href="{% url 'et_manage_view_steps' %}" class="font-white">Steps</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'et_manage_report' %}" class="font-white">Report</a></li>
+    </ul>
+</li>
+{% endblock %}
+
+{% block body %}
+<h1>{{ user }} ({{ user.alias }})</h1>
+<div id="statusblock">
+ <p>Current Progress: {{ pprogress }}</p>
+ <p>Steps Completed: {{ progress }}</p>
+</div><br />
+<table class="table">
+ <tr>
+  <th>Completed</th>
+  <th>Step</th>
+  <th>Completed By</th>
+  <th>Completed On</th>
+ </tr>
+ {% for step in steps %}
+ <tr>
+  {% if step.completed %}
+  <td><span class="glyphicon glyphicon-ok"></span></td>
+  {% else %}
+  <td><span class="glyphicon glyphicon-remove"></span></td>
+  {% endif %}
+  <td>{{ step.step }}</td>
+  <td>{{ step.completedBy }}</td>
+  <td>{{ step.completedOn }}</td>
+ </tr>
+ {% endfor %}
+</table>
+{% endblock %}
+
+{% block scriptend %}
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+$("button").click(function () {
+    $.post(location.href, { "export" : "True", "csrfmiddlewaretoken" : getCookie('csrftoken'), }, function(retData) {
+        $("body").append("<iframe src='" + retData.url + "' style='display: none;' ></iframe>");
+    });
+});
+</script>
+{% endblock %}
+
+

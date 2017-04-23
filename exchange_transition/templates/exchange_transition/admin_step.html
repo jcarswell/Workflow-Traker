@@ -1,18 +1,34 @@
 {% extends 'base.html' %}
 
 {% block navbar %}
-<li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+<li class="dropdown"><a href="#" class="dropdown-toggle font-white" data-toggle="dropdown"
+    role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret">
+    </span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'et_manage' %}" class="font-white">Admin</a></li>
+        <li><a href="{% url 'et_manage_view_users' %}" class="font-white">Users</a></li>
+        <li><a href="{% url 'et_manage_view_steps' %}" class="font-white">Steps</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'et_manage_report' %}" class="font-white">Report</a></li>
+    </ul>
+</li>
 {% endblock %}
 
 {% block body %}
 <a href="{% url 'et_manage_view_steps' %}" class="btn">Back to all steps</a>
 <form method="post">
     {% csrf_token %}
-    <label>Order: </label>
+    <label>Order</label>
     <input type="input" class="txt-form" value="{{ order }}" disabled>
     <br />
     <label for="name">Name</label>
     <input type="text" name="name" class="txt-form" value="{{ name }}" required/><br />
+    <label for="optional">Optional</label>
+    {% if optional %}
+        <input type="checkbox" name="optional" value="optional" checked/><br />
+    {% else %}
+        <input type="checkbox" name="optional" value="optional"/><br />
+    {% endif %} 
     <label>Completed</label>
     <input type="text" class="txt-form" value="{{ completed }}" disabled/><br />
     <label for="description">Description</label><br />

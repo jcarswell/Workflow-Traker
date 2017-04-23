@@ -7,7 +7,7 @@ from re import compile as re
 
 class User(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    alias = models.CharField(max_length=100, null=True)
+    alias = models.CharField(max_length=100, null=True, unique=True)
     completed = models.BooleanField(default=False)
     completedOn = models.DateTimeField(null=True)
     completedBy = models.CharField(max_length=200, null=True, blank=True)
@@ -27,6 +27,7 @@ class Step(models.Model):
     order = models.IntegerField()
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=255)
+    optional = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["order"]
