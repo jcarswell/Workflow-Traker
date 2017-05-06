@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ExchangeTransitionConfig(AppConfig):
-    name = 'exchange_transition'
-    verbose_name = 'Exchange Transition'
+class WorkflowTrackerConfig(AppConfig):
+    name = 'workflow_tracker'
+    verbose_name = 'Workflow Tracker'

@@ -37,7 +37,7 @@ def index(request):
                 'techname' : techname,
             }
             request.session.set_test_cookie()
-            response = HttpResponse(render(request, 'exchange_transition/index.html', context))
+            response = HttpResponse(render(request, 'workflow_tracker/index.html', context))
             response.set_cookie('techname', techname)
             return response
         else:
@@ -47,7 +47,7 @@ def index(request):
             techname = request.COOKIES['techname']
         except:
             request.session.set_test_cookie()
-            return HttpResponse(render(request, 'exchange_transition/index.html'))
+            return HttpResponse(render(request, 'workflow_tracker/index.html'))
 
         request.session.set_test_cookie()
         context = { 
@@ -55,7 +55,7 @@ def index(request):
             'techname' : techname,
         }
         request.session.set_test_cookie()
-        return HttpResponse(render(request, 'exchange_transition/index.html', context))
+        return HttpResponse(render(request, 'workflow_tracker/index.html', context))
     else:
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
@@ -121,13 +121,13 @@ def user(request, userAlias):
         'user' : user,
         'steps' : stepsArray,
         }
-    return HttpResponse(render(request, 'exchange_transition/user.html', context))
+    return HttpResponse(render(request, 'workflow_tracker/user.html', context))
 
 def manage_root(request):
     if request.method != 'GET':
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
 
-    return HttpResponse(render(request, 'exchange_transition/admin.html'))
+    return HttpResponse(render(request, 'workflow_tracker/admin.html'))
 
 def manage_view_users(request, userAdded=None):
     if request.method != 'GET': 
@@ -136,7 +136,7 @@ def manage_view_users(request, userAdded=None):
     context = {
         "users" : User.objects.order_by('name'),
     }
-    return HttpResponse(render(request, 'exchange_transition/admin_view_users.html', context))
+    return HttpResponse(render(request, 'workflow_tracker/admin_view_users.html', context))
 
 def manage_view_steps(request, stepAdded=None):
     if request.method != 'GET': 
@@ -145,7 +145,7 @@ def manage_view_steps(request, stepAdded=None):
     context = {
         "steps" : Step.objects.order_by('order'),
     }
-    return HttpResponse(render(request, 'exchange_transition/admin_view_steps.html', context))
+    return HttpResponse(render(request, 'workflow_tracker/admin_view_steps.html', context))
 
 def manage_report_export(request):
     response = HttpResponse(content_type='text/csv')
@@ -201,7 +201,7 @@ def manage_report(request):
         "userCompletedish" : userCompletedish or "0",
         "currentProgress" : "{:.0%}".format((userCompleted + (userInProgress * 0.5))/User.objects.count()),
     }
-    return HttpResponse(render(request, 'exchange_transition/admin_report.html', context))
+    return HttpResponse(render(request, 'workflow_tracker/admin_report.html', context))
 
 def manage_report_user(request, userAlias):
     try:
@@ -248,7 +248,7 @@ def manage_report_user(request, userAlias):
         'pprogress' : "{:.0%}".format(stepsCompleteNotOpt/stepsNotOptional),
         'steps' : stepsArray,
         }
-    return HttpResponse(render(request, 'exchange_transition/admin_report_user.html', context))
+    return HttpResponse(render(request, 'workflow_tracker/admin_report_user.html', context))
 
 
 def manage_new_step(request):
@@ -287,7 +287,7 @@ def manage_new_step(request):
                 "stepcount" : range(1, Step.objects.order_by('-order')[0].order + 2),
                 "added" : True,
             }
-            return HttpResponse(render(request, 'exchange_transition/admin_new_step.html', context))
+            return HttpResponse(render(request, 'workflow_tracker/admin_new_step.html', context))
 
             
     elif request.method == 'GET':
@@ -299,7 +299,7 @@ def manage_new_step(request):
         context = {
             "stepcount" : range(1, lastStepOrder + 2),
         }
-        return HttpResponse(render(request, 'exchange_transition/admin_new_step.html', context))
+        return HttpResponse(render(request, 'workflow_tracker/admin_new_step.html', context))
     
     else: 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)
@@ -328,10 +328,10 @@ def manage_new_user(request):
         if returnAction == "Save":
             return redirect(reverse('et_manage_view_users'))
         else:
-            return HttpResponse(render(request, 'exchange_transition/admin_new_user.html', {"added" : True}))
+            return HttpResponse(render(request, 'workflow_tracker/admin_new_user.html', {"added" : True}))
         
     elif request.method == 'GET':
-        return HttpResponse(render(request, 'exchange_transition/admin_new_user.html'))
+        return HttpResponse(render(request, 'workflow_tracker/admin_new_user.html'))
 
     else:
         return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
@@ -376,7 +376,7 @@ def manage_user(request, userAlias):
             "completedBy" : currentUser.completedBy,
             "comments" : currentUser.comments,
         }
-        return HttpResponse(render(request, 'exchange_transition/admin_user.html', context))
+        return HttpResponse(render(request, 'workflow_tracker/admin_user.html', context))
 
     else:
         return HttpResponse(status="405", reason="Request method %s is not allowed" % request.method)
@@ -425,7 +425,7 @@ def manage_step(request, orderId):
             "completed" : "%s/%s" % (UserStep.objects.filter(step=currentStep).filter(completed=True).count(),
                 UserStep.objects.filter(step=currentStep).count()),
         }
-        return HttpResponse(render(request, 'exchange_transition/admin_step.html', context))
+        return HttpResponse(render(request, 'workflow_tracker/admin_step.html', context))
     
     else: 
         return HttpResponse(status="405", reason="request method %s is not allowed" % request.method)

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('exchange_transition', '0005_auto_20170222_1232'),
+        ('workflow_tracker', '0005_auto_20170222_1232'),
     ]
 
     operations = [

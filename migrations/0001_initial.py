@@ -44,8 +44,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('completed', models.BooleanField(default=False)),
                 ('completedOn', models.DateTimeField()),
-                ('step', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='exchange_transition.Step')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='exchange_transition.User')),
+                ('step', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow_tracker.Step')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow_tracker.User')),
             ],
         ),
     ]

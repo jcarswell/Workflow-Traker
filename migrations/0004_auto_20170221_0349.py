@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('exchange_transition', '0003_userstep_completedby'),
+        ('workflow_tracker', '0003_userstep_completedby'),
     ]
 
     operations = [

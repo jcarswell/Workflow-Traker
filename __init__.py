@@ -1,1 +1,1 @@
-default_app_config = 'exchange_transition.apps.ExchangeTransitionConfig'
+default_app_config = 'workflow_tracker.apps.WorkflowTrackerConfig'
