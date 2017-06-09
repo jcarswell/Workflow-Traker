@@ -43,3 +43,59 @@ class UserStep(models.Model):
     completedBy = models.CharField(max_length=200, blank=True, null=True)
     unique_together = ("user","step")
     
+class ConfigLdap(models.Model):
+    dc = models.CharField(max_length=255, null=False, unique=True)
+    user = models.CharField(max_length=255)
+    passwd = models.CharField(max_length=255)
+    search = models.CharField(max_length=255)
+    tls = models.BooleanField(default=False)
+    tls_untrusted = models.BooleanField(default=False)
+    server = models.models.CharField(max_length=255)
+    port = models.IntegerField(default=389)
+
+    def __str__(self):
+        return "%s (%s)" % (seld.server, self.dc)
+
+class ConfigGroupPriv(models.Model):
+    name = models.CharField(max_length=255, null=False, unique=True)
+    priv_admin = models.BooleanField(default=False)      #grants full access to everything
+    priv_pj_admin = models.BooleanField(default=False)   #grants administer all projects
+    priv_pj_manager = models.BooleanField(default=False) #grants pivilege to manage owned projects
+    priv_user = models.BooleanField(default=False)       #grants access to work on assigned projects and tasks
+
+    def __str__(self):
+        return self.name
+
+class ConfigLdapMap(models.Model):
+    local_group = models.ForeignKey(ConfigGroupPriv.name, on_delete=models.CASCADE)
+    ldap = models.ForeignKey(ConfigLdap, on_delete=models.CASCADE)
+    ldap_cn = models.CharField(max_length=255, null=False)
+    ldap_type = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.ldap_cn
+
+class ConfigUser(models.Model):
+    user = models.CharField(max_length=255, null=False, unique=True)
+    name = models.CharField(max_length=255, null=False)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    pw_last_set - models.DateTimeField(auto_now_add=True, blank=True)
+    group = models.ForeignKey(ConfigGroupPriv.name, on_delete=models.CASCADE)
+    email = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class ConfigUserPasswd(model.Model):
+    """
+    This model is for storing the users privious x passwords
+    ensuring that this is update/cleaned up on update is implemeted
+    in software
+    """
+    
+    user = models.ForeignKey(ConfigUser.user, on_delete=models.CASCADE)
+    passwd = models.CharField(max_length=64, null=False)
+    salt = models.CharField(max_length=64, null=False)
+    current = models.BooleanField(default=True)
+
+    unique_together = ((user,passwd),)
